@@ -6,7 +6,7 @@ const chunkArray = (myArray: string[], chunk_size: number): string[][] => {
   return results;
 };
 
-export default (grid: string[]): string[] => {
+const minesweeper = (grid: string[]): string[] => {
   const chunked = chunkArray(grid, 5);
   const pointed = chunked
     .map((chunk: string[], i: number): string[] =>
@@ -35,3 +35,5 @@ export default (grid: string[]): string[] => {
     .flat();
   return pointed;
 };
+
+export { chunkArray, minesweeper };

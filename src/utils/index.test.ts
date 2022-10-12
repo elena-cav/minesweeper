@@ -1,14 +1,14 @@
-import mineSweeper from ".";
+import { minesweeper } from ".";
 
 describe("Name of the group", () => {
-  test.skip("first", () => {
+  test("two rows", () => {
     expect(
-      mineSweeper(["-", "-", "-", "X", "-", "-", "-", "-", "-", "-"])
-    ).toBe(true);
+      minesweeper(["-", "-", "-", "X", "-", "-", "-", "-", "-", "-"])
+    ).toEqual(["0", "0", "1", "X", "1", "0", "0", "1", "1", "1"]);
   });
-  test("first", () => {
+  test("five rows", () => {
     expect(
-      mineSweeper([
+      minesweeper([
         "-",
         "-",
         "-",
