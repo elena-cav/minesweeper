@@ -1,7 +1,10 @@
-const chunkArray = (myArray: string[], chunk_size: number): string[][] => {
+const chunkArray = (
+  myArray: string[] | null,
+  chunk_size: number
+): string[][] => {
   const results: string[][] = [];
-  while (myArray.length) {
-    results.push(myArray.splice(0, chunk_size));
+  while (myArray?.length) {
+    results.push(myArray?.splice(0, chunk_size));
   }
   return results;
 };
