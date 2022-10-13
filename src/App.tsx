@@ -20,7 +20,17 @@ function App() {
     <div className="App">
       <h1>Minesweeper</h1>
       {grid ? (
-        <Minesweeper grid={grid} />
+        <div>
+          <Minesweeper grid={grid} />
+          <button
+            onClick={() => {
+              setGrid(null);
+            }}
+            className="start-again"
+          >
+            Start again
+          </button>
+        </div>
       ) : (
         <Levels handleClick={handleLevelsClick} />
       )}
