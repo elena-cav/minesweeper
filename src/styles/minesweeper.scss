@@ -1,30 +1,75 @@
 td {
-  background-color: grey;
+  background-color: rgb(164, 164, 164);
   cursor: pointer;
   border-radius: 10%;
 }
 .easy {
-  height: 4rem;
-  width: 4rem;
+  height: 5rem;
+  width: 5rem;
   img {
-    height: 3rem;
-    width: 3rem;
+    height: 4rem;
+    width: 4rem;
   }
 }
 
 .medium {
-  height: 3rem;
-  width: 3rem;
+  height: 3.5rem;
+  width: 3.5rem;
   img {
-    height: 2rem;
-    width: 2rem;
+    height: 2.5rem;
+    width: 2.5rem;
   }
 }
 .hard {
-  height: 2rem;
-  width: 2rem;
+  height: 2.5rem;
+  width: 2.5rem;
   img {
-    height: 1rem;
-    width: 1rem;
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+}
+.info-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .flag-icon {
+    height: 1.5rem;
+  }
+}
+
+.bomb {
+  animation: rotation 2s infinite linear;
+}
+
+.mine-count {
+  background: none;
+  margin: 0;
+  color: #09041e;
+  font-size: 1.5rem;
+}
+
+.start-again {
+  margin-top: 2rem;
+  background-color: #f18805;
+  font-size: 1rem;
+  border-radius: 50px;
+  padding: 0.7rem;
+  color: white;
+  font-style: bold;
+  box-shadow: 12px 12px 16px 0 rgba(0, 0, 0, 0.25),
+    -8px -8px 12px 0 rgba(255, 255, 255, 0.3);
+  transition: 0.3s all ease-in-out;
+  &:hover {
+    background-color: #dc7b04;
+  }
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
   }
 }
