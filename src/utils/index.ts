@@ -9,8 +9,8 @@ const chunkArray = (
   return results;
 };
 
-const minesweeper = (grid: string[]): string[] => {
-  const chunked = chunkArray(grid, 5);
+const minesweeper = (grid: string[], size: number): string[] => {
+  const chunked = chunkArray(grid, size);
   const pointed = chunked
     .map((chunk: string[], i: number): string[] =>
       chunk.map((cell: string, index: number): string => {
