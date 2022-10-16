@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
+import StartAgain from "../components/StartAgain";
 import "../styles/gameover.scss";
 
 interface GameOverProps {
@@ -33,7 +34,7 @@ function GameOver({ modalIsOpen, setIsOpen, setGrid }: GameOverProps) {
         style={customStyles}
       >
         <h2 className="game-over">Game over</h2>
-        <button onClick={closeModal}>Start again</button>
+        <StartAgain onClick={closeModal} />
       </Modal>
     </div>
   );

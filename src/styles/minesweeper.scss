@@ -27,14 +27,20 @@ td {
     height: 1.5rem;
     width: 1.5rem;
   }
+  p {
+    margin: 0;
+  }
 }
 .info-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  column-gap: 1rem;
+  padding-bottom: 1rem;
 
   .flag-icon {
     height: 1.5rem;
+    padding-right: 0.3rem;
   }
 }
 
@@ -47,22 +53,6 @@ td {
   margin: 0;
   color: #09041e;
   font-size: 1.5rem;
-}
-
-.start-again {
-  margin-top: 2rem;
-  background-color: #f18805;
-  font-size: 1rem;
-  border-radius: 50px;
-  padding: 0.7rem;
-  color: white;
-  font-style: bold;
-  box-shadow: 12px 12px 16px 0 rgba(0, 0, 0, 0.25),
-    -8px -8px 12px 0 rgba(255, 255, 255, 0.3);
-  transition: 0.3s all ease-in-out;
-  &:hover {
-    background-color: #dc7b04;
-  }
 }
 
 @keyframes rotation {

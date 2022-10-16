@@ -11,9 +11,9 @@ function Timer(props: Props) {
   }, [counter]);
 
   return (
-    <div style={{}}>
+    <div style={{ fontSize: "1.5rem" }}>
       <img
-        style={{ height: "1.5rem" }}
+        style={{ height: "1.5rem", paddingRight: "0.3rem" }}
         alt="stopwatch"
         className="stopwatch"
         src={stopwatch}

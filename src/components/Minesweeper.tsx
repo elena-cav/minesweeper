@@ -4,64 +4,110 @@ import flag from "../assets/flag.png";
 import bomb from "../assets/bomb.png";
 import GameOver from "./GameOver";
 import Timer from "./Timer";
+import Win from "./Win";
+import StartAgain from "./StartAgain";
+
 interface MinesweeperProps {
   grid: null | string[][];
   setGrid: React.Dispatch<React.SetStateAction<string[][] | null>>;
 }
 
 function Minesweeper({ grid, setGrid }: MinesweeperProps) {
-  const countMines = (arr: string[][] | null): number | undefined =>
+  const countPieces = (
+    arr: string[][] | null,
+    piece: string
+  ): number | undefined =>
     arr?.reduce((accumulator, item) => {
       const partialSum: number = item.reduce(
-        (acc, cell) => (cell === "X" ? acc + 1 : acc),
+        (acc, cell) => (cell === piece ? acc + 1 : acc),
         0
       );
       return accumulator + partialSum;
     }, 0);
+
   const [flagged, setFlagged] = useState<string[]>([]);
-  const [totalMines, setTotalMines] = useState(countMines(grid));
+  const [totalMines, setTotalMines] = useState(countPieces(grid, "X"));
+  const [totalEmpty, setTotalEmpty] = useState(countPieces(grid, "-"));
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [isFirstMove, setIsFirstMove] = useState(true);
   const [selectedCells, setSelectedCells] = useState<string[]>([]);
+  const [won, setWin] = useState(false);
   const gameOver = () => {
     setIsGameOver(true);
     setTimeout(() => {
       setIsOpen(true);
-    }, 4000);
+    }, 3000);
+  };
+
+  const setPerimeter = (grid: string[][] | null, id: string) => {
+    setSelectedCells([...selectedCells, id]);
+
+    let outerIndex = Number(id[0]);
+    let innerIndex = Number(id[1]);
+
+    let firstCellOccurrence = selectedCells.filter((x) => x === id).length;
+
+    // while (firstCellOccurrence < 2) {
+    //   console.log("HERE");
+
+    //   const adjacent = [
+    //     grid?.[outerIndex][innerIndex] || "",
+    //     grid?.[outerIndex][innerIndex + 1] || "",
+    //     grid?.[outerIndex - 1][innerIndex] || "",
+    //     grid?.[outerIndex + 1][innerIndex] || "",
+    //   ];
+    //   // adjacent.forEach((cell) => {
+    //   //   outerIndex = outerIndex + 1;
+    //   //   innerIndex = innerIndex + 1;
+    //   //   if (cell !== "X" && cell !== "") {
+    //   //     setSelectedCells([...selectedCells, `${outerIndex}${innerIndex}`]);
+    //   //   }
+    //   // });
+    //   console.log(firstCellOccurrence);
+    //   firstCellOccurrence = selectedCells.filter((x) => x === id).length;
+    // }
+
+    setIsFirstMove(false);
+  };
+  const checkWin = (): void => {
+    if (selectedCells.length === totalEmpty) setWin(true);
   };
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     const cell = e.currentTarget.dataset.value;
     const id = e.currentTarget.dataset.id;
     console.log(cell);
-    if (cell === "X") {
+    if (isFirstMove && id) {
+      if (cell === "X") {
+        const i = grid![0].indexOf("-");
+        grid![0][i] = "X";
+      }
+      setPerimeter(grid, id);
+    } else if (cell === "X") {
       gameOver();
-    } else if (isFirstMove) {
-      console.log("do something");
-      setIsFirstMove(false);
     } else if (id) {
       if (flagged.includes(id)) {
         return;
       }
       setSelectedCells([...selectedCells, id]);
+      setTotalEmpty(totalEmpty! - 1);
     }
   };
   const handleRightClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     const id = e.currentTarget.dataset.id;
-
-    if (id) {
+    if (id && totalMines) {
       if (selectedCells.includes(id)) {
         return;
       }
       if (flagged.includes(id)) {
         const updatedFlagged = flagged.filter((c) => c !== id);
         setFlagged(updatedFlagged);
+        setTotalMines(totalMines + 1);
       } else {
         setFlagged([...flagged, id]);
-        if (totalMines) {
-          setTotalMines(totalMines - 1);
-        }
+        setTotalMines(totalMines - 1);
+        checkWin();
       }
     }
   };
@@ -75,13 +121,15 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
           modalIsOpen={modalIsOpen}
           setGrid={setGrid}
         />
+      ) : won ? (
+        <Win setGrid={setGrid} />
       ) : (
         <div>
           <div className="info-wrapper">
-            <h1 className="mine-count">
+            <div className="mine-count">
               <img alt="flag" className="flag-icon" src={flag} />
               {totalMines}
-            </h1>
+            </div>
             <Timer />
           </div>
           <table>
@@ -115,14 +163,11 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
               ))}
             </tbody>
           </table>
-          <button
+          <StartAgain
             onClick={() => {
               setGrid(null);
             }}
-            className="start-again"
-          >
-            Start again
-          </button>
+          />
         </div>
       )}
     </div>
