@@ -43,7 +43,7 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
     }, 3000);
   };
 
-  const setPerimeter = (grid: string[][] | null, id: string) => {
+  const setPerimeter = (id: string) => {
     console.log("SELECTED", selectedCells);
     let outerIndex = Number(id[0]);
     let innerIndex = Number(id[1]);
@@ -88,13 +88,12 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
     } else if (isFirstMove && id) {
       console.log(id);
       setSelectedCells([id]);
-      setPerimeter(grid, id);
+      setPerimeter(id);
     } else if (id) {
       if (flagged.includes(id)) {
         return;
       } else {
         setSelectedCells([...selectedCells, id]);
-        // setTotalEmpty(totalEmpty! - 1);
         console.log(grid);
         checkWin();
       }
