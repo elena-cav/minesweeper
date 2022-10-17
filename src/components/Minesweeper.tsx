@@ -30,7 +30,7 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
 
   const [flagged, setFlagged] = useState<string[]>([]);
   const [totalMines, setTotalMines] = useState(countPieces(grid, "="));
-  const [totalEmpty, setTotalEmpty] = useState(countPieces(grid, "!"));
+  const totalEmpty = countPieces(grid, "!");
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [isFirstMove, setIsFirstMove] = useState(true);
