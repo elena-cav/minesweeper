@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "../styles/minesweeper.scss";
 import flag from "../assets/flag.png";
-import bomb from "../assets/bomb.png";
 import GameOver from "./GameOver";
 import Timer from "./Timer";
 import Win from "./Win";
 import StartAgain from "./StartAgain";
+import Grid from "./Grid";
 
 interface MinesweeperProps {
   grid: null | string[][];
@@ -15,19 +15,22 @@ interface MinesweeperProps {
 function Minesweeper({ grid, setGrid }: MinesweeperProps) {
   const countPieces = (
     arr: string[][] | null,
-    piece: string
+    operator: string
   ): number | undefined =>
     arr?.reduce((accumulator, item) => {
-      const partialSum: number = item.reduce(
-        (acc, cell) => (cell === piece ? acc + 1 : acc),
-        0
-      );
+      const operations: any = {
+        "=": (acc: number, cell: string): number =>
+          cell === "X" ? acc + 1 : acc,
+        "!": (acc: number, cell: string): number =>
+          cell !== "X" ? acc + 1 : acc,
+      };
+      const partialSum: number = item.reduce(operations[operator], 0);
       return accumulator + partialSum;
     }, 0);
 
   const [flagged, setFlagged] = useState<string[]>([]);
-  const [totalMines, setTotalMines] = useState(countPieces(grid, "X"));
-  const [totalEmpty, setTotalEmpty] = useState(countPieces(grid, "-"));
+  const [totalMines, setTotalMines] = useState(countPieces(grid, "="));
+  const [totalEmpty, setTotalEmpty] = useState(countPieces(grid, "!"));
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [isFirstMove, setIsFirstMove] = useState(true);
@@ -41,8 +44,7 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
   };
 
   const setPerimeter = (grid: string[][] | null, id: string) => {
-    setSelectedCells([...selectedCells, id]);
-
+    console.log("SELECTED", selectedCells);
     let outerIndex = Number(id[0]);
     let innerIndex = Number(id[1]);
 
@@ -71,26 +73,31 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
     setIsFirstMove(false);
   };
   const checkWin = (): void => {
-    if (selectedCells.length === totalEmpty) setWin(true);
+    console.log(selectedCells.length, totalEmpty);
+    if (selectedCells.length === totalEmpty) {
+      setWin(true);
+    }
   };
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    console.log("SELECTED", selectedCells);
+
     const cell = e.currentTarget.dataset.value;
     const id = e.currentTarget.dataset.id;
-    console.log(cell);
-    if (isFirstMove && id) {
-      if (cell === "X") {
-        const i = grid![0].indexOf("-");
-        grid![0][i] = "X";
-      }
-      setPerimeter(grid, id);
-    } else if (cell === "X") {
+    if (cell === "X") {
       gameOver();
+    } else if (isFirstMove && id) {
+      console.log(id);
+      setSelectedCells([id]);
+      setPerimeter(grid, id);
     } else if (id) {
       if (flagged.includes(id)) {
         return;
+      } else {
+        setSelectedCells([...selectedCells, id]);
+        // setTotalEmpty(totalEmpty! - 1);
+        console.log(grid);
+        checkWin();
       }
-      setSelectedCells([...selectedCells, id]);
-      setTotalEmpty(totalEmpty! - 1);
     }
   };
   const handleRightClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -107,12 +114,10 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
       } else {
         setFlagged([...flagged, id]);
         setTotalMines(totalMines - 1);
-        checkWin();
       }
     }
   };
-  const tdSize =
-    grid?.length === 5 ? "easy" : grid?.length === 8 ? "medium" : "hard";
+
   return (
     <div>
       {modalIsOpen ? (
@@ -132,37 +137,14 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
             </div>
             <Timer />
           </div>
-          <table>
-            <tbody>
-              {grid?.map((row, i) => (
-                <tr key={i}>
-                  {row.map((cell, index) => {
-                    const id = `${i}${index}`;
-                    return (
-                      <td
-                        onContextMenu={handleRightClick}
-                        className={tdSize}
-                        onClick={handleClick}
-                        data-value={cell}
-                        data-id={id}
-                        key={index}
-                      >
-                        {flagged.includes(id) && !isGameOver && (
-                          <img alt="flag" className="flag" src={flag} />
-                        )}
-                        {cell === "X" && isGameOver && (
-                          <img alt="bomb" className="bomb" src={bomb} />
-                        )}
-                        {selectedCells.includes(id) && !isGameOver && (
-                          <p>{cell}</p>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Grid
+            isGameOver={isGameOver}
+            flagged={flagged}
+            handleClick={handleClick}
+            handleRightClick={handleRightClick}
+            selectedCells={selectedCells}
+            grid={grid}
+          />
           <StartAgain
             onClick={() => {
               setGrid(null);
