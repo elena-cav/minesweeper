@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import stopwatch from "../assets/stopwatch.png";
 
-interface Props {}
-
-function Timer(props: Props) {
+function Timer() {
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
