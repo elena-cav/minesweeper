@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/minesweeper.scss";
 import flag from "../assets/flag.png";
 import GameOver from "./GameOver";
@@ -46,7 +46,7 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
   const setPerimeter = (id: string) => {
     console.log("SELECTED", selectedCells);
     let outerIndex = Number(id[0]);
-    let innerIndex = Number(id[1]);
+    let innerIndex = Number(id.slice(1));
 
     let firstCellOccurrence = selectedCells.filter((x) => x === id).length;
 
@@ -94,11 +94,14 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
         return;
       } else {
         setSelectedCells([...selectedCells, id]);
-        console.log(grid);
-        checkWin();
       }
+      console.log(grid);
     }
   };
+
+  useEffect(() => {
+    checkWin();
+  }, [selectedCells, checkWin]);
   const handleRightClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     const id = e.currentTarget.dataset.id;
