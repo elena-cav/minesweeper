@@ -33,7 +33,7 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
   const totalEmpty = countPieces(grid, "!");
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [isFirstMove, setIsFirstMove] = useState(true);
+  // const [isFirstMove, setIsFirstMove] = useState(true);
   const [selectedCells, setSelectedCells] = useState<string[]>([]);
   const [won, setWin] = useState(false);
   const gameOver = () => {
@@ -43,65 +43,41 @@ function Minesweeper({ grid, setGrid }: MinesweeperProps) {
     }, 3000);
   };
 
-  const setPerimeter = (id: string) => {
-    console.log("SELECTED", selectedCells);
-    let outerIndex = Number(id[0]);
-    let innerIndex = Number(id.slice(1));
+  // const setPerimeter = (id: string) => {
+  //   let outerIndex = Number(id[0]);
+  //   let innerIndex = Number(id.slice(1));
 
-    let firstCellOccurrence = selectedCells.filter((x) => x === id).length;
+  //   let firstCellOccurrence = selectedCells.filter((x) => x === id).length;
+  //   setIsFirstMove(false);
+  // };
 
-    // while (firstCellOccurrence < 2) {
-    //   console.log("HERE");
-
-    //   const adjacent = [
-    //     grid?.[outerIndex][innerIndex] || "",
-    //     grid?.[outerIndex][innerIndex + 1] || "",
-    //     grid?.[outerIndex - 1][innerIndex] || "",
-    //     grid?.[outerIndex + 1][innerIndex] || "",
-    //   ];
-    //   // adjacent.forEach((cell) => {
-    //   //   outerIndex = outerIndex + 1;
-    //   //   innerIndex = innerIndex + 1;
-    //   //   if (cell !== "X" && cell !== "") {
-    //   //     setSelectedCells([...selectedCells, `${outerIndex}${innerIndex}`]);
-    //   //   }
-    //   // });
-    //   console.log(firstCellOccurrence);
-    //   firstCellOccurrence = selectedCells.filter((x) => x === id).length;
-    // }
-
-    setIsFirstMove(false);
-  };
-  const checkWin = (): void => {
-    console.log(selectedCells.length, totalEmpty);
-    if (selectedCells.length === totalEmpty) {
-      setWin(true);
-    }
-  };
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    console.log("SELECTED", selectedCells);
-
     const cell = e.currentTarget.dataset.value;
     const id = e.currentTarget.dataset.id;
     if (cell === "X") {
       gameOver();
-    } else if (isFirstMove && id) {
-      console.log(id);
-      setSelectedCells([id]);
-      setPerimeter(id);
-    } else if (id) {
+    }
+    // else if (isFirstMove && id) {
+    //   setSelectedCells([id]);
+    //   setPerimeter(id);
+    // }
+    else if (id) {
       if (flagged.includes(id)) {
         return;
       } else {
         setSelectedCells([...selectedCells, id]);
       }
-      console.log(grid);
     }
   };
 
   useEffect(() => {
+    const checkWin = (): void => {
+      if (selectedCells.length === totalEmpty) {
+        setWin(true);
+      }
+    };
     checkWin();
-  }, [selectedCells, checkWin]);
+  }, [selectedCells, totalEmpty]);
   const handleRightClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     const id = e.currentTarget.dataset.id;
